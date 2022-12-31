@@ -5,41 +5,9 @@ canvas.height = window.innerHeight;
 const particlesArray = []; //stores particles created
 let hue = 0;
 
-/**
- * Create a rectangle that automatically keeps the same size 
- * and fill when resizing the window.
- */
-// window.addEventListener('resize', function() {
-//     canvas.width = window.innerWidth;
-//     canvas.height = window.innerHeight;
-//     ctx.fillStyle = 'white';
-//     ctx.fillRect(10, 10, 150, 50);
-// })
-
-// ctx.fillStyle = 'white';
-// ctx.fillRect(10, 10, 50, 50)
 
 /**
- * Create a circle that automatically keeps the same size 
- * and fill when resizing the window.
- */
-
-// window.addEventListener('resize', function() {
-//     canvas.width = window.innerWidth;
-//     canvas.height = window.innerHeight;
-// });
-// ctx.fillStyle = 'blue';
-// ctx.strokeStyle = 'red';
-// ctx.lineWidth = 15;
-// ctx.beginPath();
-// ctx.arc(100, 100, 50, 0, Math.PI * 2);
-// ctx.stroke();
-// ctx.fill();
-// console.log(ctx);
-
-
-/**
- * Create a mouse...
+ * Check for resize of window
  */
 
 window.addEventListener('resize', function() {
@@ -47,9 +15,10 @@ window.addEventListener('resize', function() {
     canvas.height = window.innerHeight;
 });
 
+
 /** 
- * store mouse x and y coords
- * starts as undefined for a blank canvas
+ * Store mouse x and y coords
+ * Starts as undefined for a blank canvas
  * 
 */ 
 const mouse = {
@@ -58,8 +27,8 @@ const mouse = {
 }
 
 /** 
- * updates the updated mouse location coords when mouse clicked
- * draws a circle where the mouse was clicked
+ * Updates the updated mouse location coords when mouse clicked
+ * Draws a circle where the mouse was clicked
 */ 
 canvas.addEventListener('click', function(event){
     mouse.x = event.x;
@@ -70,8 +39,9 @@ canvas.addEventListener('click', function(event){
     }
 })
 
+
 /**
- * track the mouse movement
+ * Track the mouse movement
  */
 canvas.addEventListener('mousemove', function(event){
     mouse.x = event.x;
@@ -83,15 +53,6 @@ canvas.addEventListener('mousemove', function(event){
         }
 })
 
-// /**
-//  * draw a circle using a 360 arc of PI * 2 to complete the circle
-//  */
-// function drawCircle(){
-//     ctx.fillStyle = 'blue';
-//     ctx.beginPath();
-//     ctx.arc(mouse.x, mouse.y, 50, 0, Math.PI * 2);
-//     ctx.fill();
-// }
 
 /**
  * Creates a Particle object on the mouse and flow in random direction
@@ -122,6 +83,9 @@ class Particle {
 }
 
 
+/**
+ * Adjust the look of particles and draws the lines between them
+ */
 function handleParticles() {
     for (let i = 0; i < particlesArray.length; i++){
         particlesArray[i].update();
@@ -130,8 +94,8 @@ function handleParticles() {
             const dx = particlesArray[i].x - particlesArray[j].x; //calculate distance between particle in x axis
             const dy = particlesArray[i].y - particlesArray[j].y; //calculate distance between particle in y axis
             const distance = Math.sqrt(dx * dx + dy * dy); //calculate distance using pythagorean thorem
-            // check if distance is under 100 pixels
-            if (distance < 100){
+            // check if distance is under a threshold to draw the connecting line
+            if (distance < 50){
                 ctx.beginPath(); //begin line draw
                 ctx.strokeStyle = particlesArray[i].color; //sets color of stroke line
                 ctx.lineWidth = particlesArray[i].size/10; //adjust the width of the stroke line relative to circle radius
@@ -143,24 +107,21 @@ function handleParticles() {
         }
         if (particlesArray[i].size <= 0.3){
             particlesArray.splice(i, 1); //remove particle at index if it is <= 0.3
-            console.log(particlesArray.length)
             i--; //decrement index if element was deleted
         }
     }
 }
 
+
 /**
- * animates using drawCircle
- * loops over itself endlessly
- * clears the animation on each loop
+ * Animates using drawCircle
+ * Loops over itself endlessly
+ * Clears the animation on each loop
  */
 function animate(){
     ctx.clearRect(0, 0, canvas.width, canvas.height); //this clears the entire canvas on each refresh
-    // ctx.fillStyle = 'rgba(0,0,0,0.01)'; // gives opacity to particles
-    // ctx.fillRect(0, 0, canvas.width, canvas.height);
     handleParticles();
     hue+=2; // increment hue for each animation step, can increase for faster color change
     requestAnimationFrame(animate); //calls the animate function and loops it because animate calls itself
 }
 animate(); //starts the loop
-
